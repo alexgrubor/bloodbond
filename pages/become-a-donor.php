@@ -1,10 +1,47 @@
-<?php require ('../shared/header.php')?>
+<?php require('../shared/header.php');
+require('../db_config.php');
+
+
+$submissionSuccessful = false;
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $donor_name = $_POST['donor_name'];
+    $donor_blood_type = $_POST['donor_blood_type'];
+    $donor_contact = $_POST['donor_contact'];
+    $donor_email = $_POST['donor_email'];
+    $donor_address = $_POST['donor_address'];
+    $sql = "INSERT INTO blood_donors (donor_name, donor_blood_type, donor_contact, donor_email, donor_address) VALUES (:donor_name, :donor_blood_type, :donor_contact, :donor_email, :donor_address)";
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->bindParam("
+    :donor_name", $donor_name, PDO::PARAM_STR);
+    $stmt->bindParam("
+    :donor_blood_type", $donor_blood_type, PDO::PARAM_STR);
+    $stmt->bindParam("
+    :donor_contact", $donor_contact, PDO::PARAM_STR);
+    $stmt->bindParam("
+    :donor_email", $donor_email, PDO::PARAM_STR);
+    $stmt->bindParam("
+    :donor_address", $donor_address, PDO::PARAM_STR);
+
+    if ($stmt->execute([
+        'donor_name' => $donor_name,
+        'donor_blood_type' => $donor_blood_type,
+        'donor_contact' => $donor_contact,
+        'donor_email' => $donor_email,
+        'donor_address' => $donor_address
+    ])) {
+        $submissionSuccessful = true;
+    }
+}
+
+?>
 
 
 <div class="flex flex-col items-center justify-center">
     <h2 class="text-2xl font-bold mb-6 text-center">Become a Blood Donor</h2>
     <div class="p-3 flex lg:flex-row flex-col-reverse justify-center items-center gap-3">
-        <form action="submit-donor.php" method="post" class="w-full max-w-lg mx-auto">
+        <form action="become-a-donor.php" method="post" class="w-full max-w-lg mx-auto">
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="donor-name">
                     Full Name
@@ -56,4 +93,4 @@
 
 </div>
 
-<?php require ('../shared/footer.php')?>
+<?php require('../shared/footer.php') ?>
